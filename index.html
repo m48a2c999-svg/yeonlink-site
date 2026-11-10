@@ -60,12 +60,17 @@ p{margin:0}
 
 /* 히어로 */
 .hero{position:relative;min-height:min(100svh,980px);display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;padding-block:110px 40px}
-#rings{position:absolute;inset:0;width:100%;height:100%;z-index:0}
+.ringart{position:absolute;z-index:1;right:max(-60px,-4vw);top:9%;width:min(58vw,880px);pointer-events:none;will-change:transform}
+.ringart img{width:100%;height:auto;filter:drop-shadow(0 40px 60px rgba(120,90,180,.22));animation:floaty 9s ease-in-out infinite}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-22px) rotate(3deg)}}
+.hero::before{content:"";position:absolute;inset:0;z-index:0;background:radial-gradient(60% 55% at 78% 30%,rgba(227,220,255,.75),transparent 70%),radial-gradient(45% 45% at 12% 85%,rgba(247,221,213,.6),transparent 70%),radial-gradient(40% 40% at 95% 90%,rgba(213,234,251,.7),transparent 70%)}
+.herodesc{font-family:var(--f-kr);font-size:clamp(16px,1.5vw,19px);font-weight:500;color:#3E3C47;max-width:34ch;margin-top:22px;line-height:1.7}
+.ringart.fin{right:auto;left:50%;top:50%;width:min(92vw,980px);translate:-50% -50%;opacity:.55}
 .hero .inner{position:relative;z-index:2;width:100%}
 .hero .lede{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;margin-bottom:18px}
 .hero .lede p{font-family:var(--f-kr);font-size:clamp(16px,1.6vw,19px);font-weight:500;max-width:30ch;color:#3E3C47}
-.mega{font-weight:900;letter-spacing:-.065em;line-height:.82;font-size:clamp(64px,15.4vw,236px);text-transform:uppercase;margin-left:-.04em}
-.mega .line{display:block;overflow:hidden;padding-bottom:.06em}
+.mega{font-weight:900;letter-spacing:-.06em;line-height:.86;font-size:clamp(58px,12.6vw,200px);text-transform:uppercase}
+.mega .line{display:block;overflow:hidden;padding-bottom:.08em;white-space:nowrap}
 .mega .ch{display:inline-block;will-change:transform}
 .mega .serif{font-family:var(--f-serif);font-style:italic;font-weight:400;text-transform:none;letter-spacing:-.02em;color:var(--violet)}
 .hero .foot{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-top:26px}
@@ -178,7 +183,7 @@ section{position:relative}
 
 /* 마지막 */
 .finale{min-height:92svh;display:flex;align-items:center;overflow:hidden;background:var(--paper)}
-#finaleRings{position:absolute;inset:0;width:100%;height:100%}
+
 .finale .inner{position:relative;z-index:2;text-align:center;display:flex;flex-direction:column;align-items:center;gap:26px;padding-block:120px}
 .finale .mega2{font-weight:900;letter-spacing:-.06em;line-height:.88;font-size:clamp(52px,10vw,150px)}
 .finale .mega2 .serif{font-family:var(--f-serif);font-style:italic;font-weight:400;letter-spacing:-.02em;color:var(--violet)}
@@ -219,6 +224,9 @@ footer .biz span{white-space:nowrap}
   .near .radarbox{order:-1;max-width:440px}
 }
 @media (max-width:760px){
+  .ringart{right:auto;left:50%;top:64px;width:min(96vw,520px);translate:-50% 0}
+  .hero{justify-content:flex-end;padding-top:min(72vw,400px)}
+  .ringart.fin{top:50%;translate:-50% -50%}
   .price .grid,.faq{grid-template-columns:1fr}
   .rail{width:auto;flex-direction:column;align-items:center}
   .step{width:100%;max-width:400px;align-items:center;text-align:center}
@@ -256,16 +264,17 @@ footer .biz span{white-space:nowrap}
 
 <main id="top">
   <section class="hero wrap" aria-labelledby="h-hero">
-    <canvas id="rings" aria-hidden="true"></canvas>
+    <div class="ringart" id="ringart" aria-hidden="true"><img src="img/rings.webp" alt="" width="760" height="511"></div>
     <div class="inner">
       <div class="lede">
         <p class="kr-eyebrow">오늘의 질문으로 만나는 근처 인연 · 만 19세 이상</p>
-        <p>사진보다 답이 먼저예요. 매일 하나의 질문에 답하면, 근처 사람들의 답이 열립니다.</p>
       </div>
       <h1 class="mega" id="h-hero" aria-label="Words first. Feel closer.">
-        <span class="line" data-split>Words first.</span>
+        <span class="line"><span data-split>Words</span></span>
+        <span class="line"><span data-split>first.</span></span>
         <span class="line"><span data-split>Feel</span> <span class="serif" data-split>closer.</span></span>
       </h1>
+      <p class="herodesc">말에서 시작되는 우리의 연결. 매일 하나의 질문에 답하면 근처 사람들의 답이 열려요. 사진보다 먼저, 서로의 이야기를 나눠요.</p>
       <div class="foot">
         <div class="ctas">
           <a class="cta" href="#download"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.37 12.6c-.02-2.3 1.88-3.4 1.96-3.46-1.07-1.56-2.73-1.77-3.32-1.8-1.41-.14-2.76.83-3.48.83-.72 0-1.82-.81-3-.79-1.54.02-2.97.9-3.76 2.28-1.6 2.78-.41 6.9 1.15 9.16.76 1.1 1.67 2.34 2.86 2.3 1.15-.05 1.58-.74 2.97-.74 1.38 0 1.78.74 2.99.72 1.24-.02 2.02-1.12 2.77-2.23.87-1.28 1.23-2.52 1.25-2.58-.03-.01-2.4-.92-2.42-3.65zM14.1 5.86c.63-.77 1.06-1.83.94-2.89-.91.04-2.02.61-2.67 1.37-.58.67-1.1 1.76-.96 2.8 1.02.08 2.06-.52 2.69-1.28z"/></svg><span><span class="sub">곧 출시</span><span class="t">App Store</span></span></a>
@@ -382,7 +391,7 @@ footer .biz span{white-space:nowrap}
   </section>
 
   <section class="finale wrap" id="download" aria-labelledby="h-final">
-    <canvas id="finaleRings" aria-hidden="true"></canvas>
+    <div class="ringart fin" id="finArt" aria-hidden="true"><img src="img/rings.webp" alt="" width="760" height="511" loading="lazy"></div>
     <div class="inner">
       <p class="eyebrow">Coming to the App Store</p>
       <h2 class="mega2" id="h-final">오늘, <span class="serif">답</span>부터.</h2>
@@ -469,72 +478,8 @@ footer .biz span{white-space:nowrap}
     if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(function(){ msg.textContent='복사했어요'; }, sel); else sel();
   });
 
-  /* 유리 고리 (캔버스) */
-  var PAL = [[196,178,248],[156,205,246],[244,178,160],[150,214,186],[196,178,248]];
-  function palAt(t){ t=((t%1)+1)%1*4; var i=Math.floor(t), f=t-i, a=PAL[i], b=PAL[i+1];
-    return [a[0]+(b[0]-a[0])*f, a[1]+(b[1]-a[1])*f, a[2]+(b[2]-a[2])*f]; }
-  function Rings(canvas, opts){
-    var ctx = canvas.getContext('2d'), W=0, H=0, dpr=1, st={sep:opts.sep0, rot:0, tilt:0.95, mx:0, my:0, scale:opts.scale||1};
-    function size(){ dpr=Math.min(window.devicePixelRatio||1,2); var r=canvas.getBoundingClientRect(); W=r.width; H=r.height; canvas.width=W*dpr; canvas.height=H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); }
-    size(); window.addEventListener('resize', size);
-    function ring(cx, phase, axisTilt){
-      var R = Math.min(W,H)*0.27*st.scale, segs=120, pts=[];
-      for (var i=0;i<=segs;i++){
-        var a=i/segs*Math.PI*2, x=Math.cos(a)*R, y=Math.sin(a)*R, z=0;
-        // 고리 자체 기울기 (y축 회전)
-        var ca=Math.cos(axisTilt), sa=Math.sin(axisTilt);
-        var x1=x*ca, z1=x*sa; x=x1; z=z1;
-        // 전체 회전 (x축 기울임 + 천천히 회전)
-        var ct=Math.cos(st.tilt+st.my*0.25), sn=Math.sin(st.tilt+st.my*0.25);
-        var y2=y*ct - z*sn, z2=y*sn + z*ct; y=y2; z=z2;
-        var cr=Math.cos(st.rot+st.mx*0.3), sr=Math.sin(st.rot+st.mx*0.3);
-        var x3=x*cr + z*sr, z3=-x*sr + z*cr; x=x3+cx+(opts.dx?opts.dx():0); z=z3;
-        var p = 900/(900 + z);
-        pts.push({x:W/2 + x*p, y:H*opts.cy + y*p, z:z, t:i/segs+phase, p:p});
-      }
-      return pts;
-    }
-    function draw(){
-      ctx.clearRect(0,0,W,H);
-      var R = Math.min(W,H)*0.27*st.scale, s = st.sep*R;
-      var A = ring(-s, 0, Math.PI/2*0.0), B = ring(s, 0.5, Math.PI/2);
-      var segs=[];
-      [A,B].forEach(function(P, k){ for (var i=0;i<P.length-1;i++) segs.push({a:P[i], b:P[i+1], z:(P[i].z+P[i+1].z)/2, k:k}); });
-      segs.sort(function(u,v){ return v.z - u.z; });
-      var tube = Math.max(14, R*0.17);
-      for (var j=0;j<segs.length;j++){
-        var g=segs[j], c=palAt(g.a.t + st.rot*0.08), w=tube*g.a.p;
-        var depth = Math.max(0, Math.min(1, 0.5 - g.z/(R*2.4)));
-        ctx.lineCap='round';
-        ctx.strokeStyle='rgba('+(c[0]|0)+','+(c[1]|0)+','+(c[2]|0)+','+(0.72+depth*0.26)+')';
-        ctx.lineWidth=w; ctx.beginPath(); ctx.moveTo(g.a.x,g.a.y); ctx.lineTo(g.b.x,g.b.y); ctx.stroke();
-        ctx.strokeStyle='rgba(255,255,255,'+(0.35+depth*0.5)+')';
-        ctx.lineWidth=w*0.22; ctx.beginPath(); ctx.moveTo(g.a.x,g.a.y-w*0.22); ctx.lineTo(g.b.x,g.b.y-w*0.22); ctx.stroke();
-        ctx.strokeStyle='rgba(92,71,139,'+(0.10+depth*0.12)+')';
-        ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(g.a.x,g.a.y+w*0.5); ctx.lineTo(g.b.x,g.b.y+w*0.5); ctx.stroke();
-      }
-    }
-    var running=true, last=performance.now();
-    function loop(now){
-      var dt=Math.min(50, now-last); last=now;
-      if (!reduce) st.rot += dt*0.00018;
-      draw(); if (running) requestAnimationFrame(loop);
-    }
-    requestAnimationFrame(loop);
-    if ('IntersectionObserver' in window){
-      new IntersectionObserver(function(es){ es.forEach(function(e){ var was=running; running=e.isIntersecting; if(running&&!was){ last=performance.now(); requestAnimationFrame(loop);} }); }).observe(canvas);
-    }
-    return st;
-  }
-  var heroRings = Rings(document.getElementById('rings'), {sep0:1.05, cy:0.42, scale:1.15, dx:function(){ return window.innerWidth>900 ? window.innerWidth*0.17 : 0; }});
-  var finRings = Rings(document.getElementById('finaleRings'), {sep0:1.4, cy:0.5, scale:1.05});
-  if (!reduce){
-    window.addEventListener('pointermove', function(e){
-      var nx=e.clientX/window.innerWidth-0.5, ny=e.clientY/window.innerHeight-0.5;
-      heroRings.mx=nx; heroRings.my=ny; finRings.mx=nx; finRings.my=ny;
-    }, {passive:true});
-  }
-
+  /* 유리 고리 이미지: 마우스 따라 살짝 움직임 */
+  var art=document.getElementById('ringart'), finArt=document.getElementById('finArt');
   /* 위치 레이더 */
   (function(){
     var c=document.getElementById('radar'), ctx=c.getContext('2d'), W=0, dpr=1, t0=performance.now();
@@ -594,16 +539,17 @@ footer .biz span{white-space:nowrap}
   });
   var chs = document.querySelectorAll('.mega .ch');
   gsap.from(chs, {yPercent:110, rotate:8, duration:1.1, ease:'expo.out', stagger:0.03, delay:0.1});
-  gsap.from('.hero .lede > *, .hero .foot', {y:24, opacity:0, duration:1, ease:'power3.out', stagger:0.1, delay:0.6});
+  gsap.from('.hero .lede > *, .herodesc, .hero .foot', {y:24, opacity:0, duration:1, ease:'power3.out', stagger:0.1, delay:0.6});
 
-  // 스크롤: 고리가 서로 걸림 + 글자가 흩어짐
-  ScrollTrigger.create({trigger:'.hero', start:'top top', end:'bottom top', scrub:true,
-    onUpdate:function(self){ heroRings.sep = 1.05 - self.progress*0.62; heroRings.tilt = 0.95 + self.progress*0.5; }});
-  gsap.to('.mega .line:first-child .ch', {xPercent:function(i){ return (i-6)*18; }, ease:'none', scrollTrigger:{trigger:'.hero', start:'top top', end:'bottom top', scrub:true}});
-  gsap.to('.mega .line:last-child', {x:function(){ return window.innerWidth*0.12; }, ease:'none', scrollTrigger:{trigger:'.hero', start:'top top', end:'bottom top', scrub:true}});
-
-  ScrollTrigger.create({trigger:'.finale', start:'top bottom', end:'center center', scrub:true,
-    onUpdate:function(self){ finRings.sep = 1.4 - self.progress*0.95; }});
+  // 고리: 등장 + 마우스 패럴랙스 + 스크롤에 따라 커지며 회전
+  gsap.from(art, {scale:0.7, rotate:-18, opacity:0, duration:1.6, ease:'expo.out'});
+  var ax=gsap.quickTo(art,'x',{duration:0.9,ease:'power3'}), ay=gsap.quickTo(art,'y',{duration:0.9,ease:'power3'});
+  window.addEventListener('pointermove', function(e){ ax((e.clientX/window.innerWidth-0.5)*-46); ay((e.clientY/window.innerHeight-0.5)*-30); }, {passive:true});
+  gsap.to('#ringart img', {scale:1.18, rotate:16, yPercent:14, ease:'none', scrollTrigger:{trigger:'.hero', start:'top top', end:'bottom top', scrub:true}});
+  gsap.utils.toArray('.mega .line').forEach(function(l,i){
+    gsap.to(l, {xPercent:(i%2?5:-5), ease:'none', scrollTrigger:{trigger:'.hero', start:'top top', end:'bottom top', scrub:true}});
+  });
+  gsap.fromTo(finArt, {scale:0.6, rotate:-24}, {scale:1.05, rotate:8, ease:'none', scrollTrigger:{trigger:'.finale', start:'top bottom', end:'bottom bottom', scrub:true}});
 
   // 오늘의 질문: 잠긴 답이 풀림
   ScrollTrigger.create({trigger:'#qcard', start:'top 55%', once:true, onEnter:function(){
