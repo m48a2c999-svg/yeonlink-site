@@ -132,9 +132,9 @@ section{position:relative}
 .how .body{color:#BDB9C9}
 .how .eyebrow{color:#B9A6EE}
 .rail{display:flex;gap:clamp(20px,3vw,44px);padding-bottom:clamp(80px,10vw,140px);width:max-content}
-.step{width:min(82vw,380px);flex:none;display:flex;flex-direction:column;gap:18px}
-.phone{position:relative;border-radius:46px;padding:10px;background:linear-gradient(145deg,#3A3646,#16151B);box-shadow:0 50px 80px -30px rgba(0,0,0,.6),inset 0 0 0 1px rgba(255,255,255,.08)}
-.phone img{border-radius:37px;width:100%;aspect-ratio:1290/2796;object-fit:cover;background:#F6F5F2}
+.step{width:min(82vw,320px);flex:none;display:flex;flex-direction:column;gap:14px}
+.phone{position:relative;width:min(100%,calc(52vh * 0.4614 + 16px));border-radius:36px;padding:8px;background:linear-gradient(145deg,#3A3646,#16151B);box-shadow:0 50px 80px -30px rgba(0,0,0,.6),inset 0 0 0 1px rgba(255,255,255,.08)}
+.phone img{border-radius:28px;width:100%;height:auto;aspect-ratio:1290/2796;object-fit:cover;background:#F6F5F2}
 .step .n{font-size:13px;font-weight:800;letter-spacing:.12em;color:#B9A6EE}
 .step h3{font-family:var(--f-kr);font-size:clamp(22px,2.2vw,28px);font-weight:900;letter-spacing:-.03em;line-height:1.3;color:#fff}
 .step p{font-family:var(--f-kr);font-size:15px;color:#BDB9C9;line-height:1.7}
@@ -571,8 +571,8 @@ footer .biz span{white-space:nowrap}
       var rail=document.getElementById('rail');
       function dist(){ return Math.max(0, rail.scrollWidth - window.innerWidth + 80); }
       gsap.to(rail, {x:function(){ return -dist(); }, ease:'none',
-        scrollTrigger:{trigger:'#railwrap', start:'top 12%', end:function(){ return '+='+dist(); }, pin:true, scrub:0.6, invalidateOnRefresh:true}});
-      gsap.utils.toArray('.step .phone').forEach(function(p,i){ gsap.fromTo(p,{rotate:i%2?3:-3},{rotate:i%2?-3:3,ease:'none',scrollTrigger:{trigger:'#railwrap',start:'top 12%',end:function(){return '+='+dist();},scrub:true}}); });
+        scrollTrigger:{trigger:'#railwrap', start:'top 150px', end:function(){ return '+='+dist(); }, pin:true, scrub:0.6, invalidateOnRefresh:true}});
+      gsap.utils.toArray('.step .phone').forEach(function(p,i){ gsap.fromTo(p,{rotate:i%2?3:-3},{rotate:i%2?-3:3,ease:'none',scrollTrigger:{trigger:'#railwrap',start:'top 150px',end:function(){return '+='+dist();},scrub:true}}); });
     }
   });
 
