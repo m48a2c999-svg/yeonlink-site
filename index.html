@@ -1,0 +1,646 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>연결고리 Yeonlink</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="사진보다 답이 먼저. 매일 하나의 질문에 답하면 근처 사람들의 답이 열리는 위치 기반 만남 앱, 연결고리.">
+<meta property="og:title" content="연결고리 Yeonlink — Words first. Feel closer.">
+<meta property="og:description" content="매일 하나의 질문, 근처 사람들의 답, 서로 고리를 걸면 시작되는 대화.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://yeonlink.com/">
+<meta property="og:image" content="https://yeonlink.com/img/og.png">
+<meta name="theme-color" content="#F3F1EE">
+<link rel="icon" type="image/png" href="img/favicon.png">
+<link rel="apple-touch-icon" href="img/icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+KR:wght@400;500;700;900&family=Instrument+Serif:ital@0;1&display=swap">
+<style>
+/* Layout: 한 화면을 꽉 채우는 키네틱 타이포 + 두 개의 유리 고리가 스크롤에 따라 걸리는 이야기형 원페이지 */
+:root{
+  --pearl:#F3F1EE; --paper:#FFFFFF; --ink:#1D1C22; --muted:#64626E; --line:#E2DFE6;
+  --lilac:#E3DCFF; --sky:#D5EAFB; --blush:#F7DDD5; --mint:#DAEEE4;
+  --violet:#5C478B; --violet-deep:#2E2147; --dot:#8668BB;
+  --f-body:Inter,"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",Arial,sans-serif;
+  --f-kr:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --f-serif:"Instrument Serif","Times New Roman",serif;
+  --ease:cubic-bezier(.2,.8,.2,1);
+  --gut:max(16px, env(safe-area-inset-left, 0px));
+  --gut-r:max(16px, env(safe-area-inset-right, 0px));
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;background:var(--pearl)}
+body{margin:0;background:var(--pearl);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;word-break:keep-all;overflow-wrap:anywhere;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{max-width:100%;display:block}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--violet);outline-offset:3px;border-radius:6px}
+.wrap{padding-left:var(--gut);padding-right:var(--gut-r)}
+.inner{max-width:1240px;margin:0 auto}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--violet)}
+.kr-eyebrow{font-size:13px;font-weight:700;letter-spacing:.04em;color:var(--violet)}
+h1,h2,h3{margin:0;text-wrap:balance}
+p{margin:0}
+
+/* 상단 바 */
+.bar{position:fixed;inset:0 0 auto;z-index:50;padding-top:env(safe-area-inset-top,0px)}
+.bar .row{display:flex;align-items:center;justify-content:space-between;gap:12px;height:64px}
+.word{font-weight:900;font-size:22px;letter-spacing:-.05em;text-decoration:none;display:flex;align-items:baseline;gap:8px}
+.word i{font-style:normal;color:var(--dot)}
+.word small{font-family:var(--f-kr);font-weight:700;font-size:13px;letter-spacing:0;color:var(--muted)}
+.bar nav{display:flex;gap:6px;align-items:center}
+.bar nav a{font-size:14px;font-weight:600;text-decoration:none;padding:8px 12px;border-radius:999px;color:var(--ink)}
+.bar nav a:hover{background:rgba(255,255,255,.7)}
+.bar nav .pill{background:var(--ink);color:#fff}
+.bar nav .pill:hover{background:var(--violet-deep)}
+.bar.scrolled{background:rgba(243,241,238,.72);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);box-shadow:0 1px 0 var(--line)}
+@media (max-width:640px){.bar nav a:not(.pill){display:none}}
+
+/* 히어로 */
+.hero{position:relative;min-height:min(100svh,980px);display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;padding-block:110px 40px}
+#rings{position:absolute;inset:0;width:100%;height:100%;z-index:0}
+.hero .inner{position:relative;z-index:2;width:100%}
+.hero .lede{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;margin-bottom:18px}
+.hero .lede p{font-family:var(--f-kr);font-size:clamp(16px,1.6vw,19px);font-weight:500;max-width:30ch;color:#3E3C47}
+.mega{font-weight:900;letter-spacing:-.065em;line-height:.82;font-size:clamp(64px,15.4vw,236px);text-transform:uppercase;margin-left:-.04em}
+.mega .line{display:block;overflow:hidden;padding-bottom:.06em}
+.mega .ch{display:inline-block;will-change:transform}
+.mega .serif{font-family:var(--f-serif);font-style:italic;font-weight:400;text-transform:none;letter-spacing:-.02em;color:var(--violet)}
+.hero .foot{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-top:26px}
+.cta{display:inline-flex;align-items:center;gap:10px;height:54px;padding:0 22px 0 18px;border-radius:999px;background:var(--ink);color:#fff;font-weight:700;font-size:15px;text-decoration:none;border:0;cursor:pointer;transition:transform .3s var(--ease),background .3s}
+.cta:hover{transform:translateY(-2px);background:var(--violet-deep)}
+.cta svg{width:22px;height:22px}
+.cta .sub{display:block;font-size:11px;font-weight:600;opacity:.7;line-height:1.1}
+.cta .t{display:block;line-height:1.15}
+.ghost{display:inline-flex;align-items:center;height:54px;padding:0 20px;border-radius:999px;border:1.5px solid var(--ink);font-weight:700;font-size:15px;text-decoration:none}
+.ghost:hover{background:var(--paper)}
+.ctas{display:flex;gap:10px;flex-wrap:wrap}
+.scrollcue{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:10px}
+.scrollcue span{display:block;width:44px;height:1.5px;background:var(--ink);transform-origin:left;animation:cue 2.2s var(--ease) infinite}
+@keyframes cue{0%{transform:scaleX(0)}60%{transform:scaleX(1)}100%{transform:scaleX(1);opacity:0}}
+
+/* 흐르는 답 */
+.stream{position:relative;padding-block:26px;border-block:1px solid var(--line);background:var(--paper);overflow:hidden}
+.track{display:flex;gap:12px;width:max-content;animation:flow 60s linear infinite}
+.track.rev{animation-direction:reverse;animation-duration:72s;margin-top:12px}
+.stream:hover .track{animation-play-state:paused}
+.chip{flex:none;display:flex;align-items:center;gap:10px;padding:12px 18px 12px 12px;border-radius:999px;background:var(--pearl);font-family:var(--f-kr);font-size:15px;white-space:nowrap}
+.chip b{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:700;flex:none}
+.chip em{font-style:normal;color:var(--muted);font-size:13px}
+@keyframes flow{to{transform:translateX(-50%)}}
+.stream .note{position:absolute;right:var(--gut-r);bottom:6px;font-size:11px;color:var(--muted)}
+
+/* 섹션 공통 */
+section{position:relative}
+.sec{padding-block:clamp(90px,12vw,170px)}
+.big{font-family:var(--f-kr);font-weight:900;letter-spacing:-.045em;line-height:1.08;font-size:clamp(38px,6.4vw,92px)}
+.big .serif{font-family:var(--f-serif);font-weight:400;font-style:italic;letter-spacing:-.01em;color:var(--violet)}
+.body{font-family:var(--f-kr);font-size:clamp(16px,1.5vw,19px);color:#45434F;max-width:44ch;line-height:1.75}
+
+/* 오늘의 질문 */
+.today .grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(32px,6vw,90px);align-items:center}
+.qcard{position:relative;background:var(--paper);border-radius:34px;padding:clamp(24px,3.4vw,40px);box-shadow:0 40px 90px -30px rgba(60,40,90,.28),0 0 0 1px var(--line);overflow:hidden}
+.qcard .date{display:flex;justify-content:space-between;font-size:13px;font-weight:700;color:var(--muted)}
+.qcard .date b{color:var(--violet)}
+.qcard h3{font-family:var(--f-kr);font-weight:900;font-size:clamp(26px,3vw,38px);line-height:1.25;letter-spacing:-.035em;margin:18px 0 22px;min-height:2.5em}
+.qcard h3 .caret{display:inline-block;width:3px;height:1em;background:var(--violet);vertical-align:-.12em;margin-left:3px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.ans{display:flex;flex-direction:column;gap:10px}
+.ans .a{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:20px;background:var(--pearl);font-family:var(--f-kr);font-size:15px;line-height:1.55}
+.ans .a b{width:34px;height:34px;flex:none;border-radius:50%;display:grid;place-items:center;font-size:14px}
+.ans .a small{display:block;font-size:12px;color:var(--muted);margin-top:2px}
+.ans .a.locked{filter:blur(5px);opacity:.6;user-select:none}
+.qcard .lockmsg{position:absolute;left:50%;bottom:28px;transform:translateX(-50%);background:var(--ink);color:#fff;font-size:13px;font-weight:700;padding:10px 16px;border-radius:999px;white-space:nowrap;font-family:var(--f-kr)}
+.today .side{display:flex;flex-direction:column;gap:22px}
+.today .facts{display:flex;gap:28px;flex-wrap:wrap;margin-top:6px}
+.today .facts div{display:flex;flex-direction:column}
+.today .facts strong{font-size:clamp(30px,3.6vw,46px);font-weight:900;letter-spacing:-.05em;line-height:1}
+.today .facts span{font-family:var(--f-kr);font-size:13px;color:var(--muted);margin-top:6px}
+
+/* 고리 거는 법: 가로 스크롤 */
+.how{background:var(--ink);color:#F4F2F8;overflow:hidden}
+.how .head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;padding-block:clamp(80px,10vw,140px) 40px}
+.how .big{color:#fff}
+.how .big .serif{color:#C9B8F5}
+.how .body{color:#BDB9C9}
+.how .eyebrow{color:#B9A6EE}
+.rail{display:flex;gap:clamp(20px,3vw,44px);padding-bottom:clamp(80px,10vw,140px);width:max-content}
+.step{width:min(82vw,380px);flex:none;display:flex;flex-direction:column;gap:18px}
+.phone{position:relative;border-radius:46px;padding:10px;background:linear-gradient(145deg,#3A3646,#16151B);box-shadow:0 50px 80px -30px rgba(0,0,0,.6),inset 0 0 0 1px rgba(255,255,255,.08)}
+.phone img{border-radius:37px;width:100%;aspect-ratio:1290/2796;object-fit:cover;background:#F6F5F2}
+.step .n{font-size:13px;font-weight:800;letter-spacing:.12em;color:#B9A6EE}
+.step h3{font-family:var(--f-kr);font-size:clamp(22px,2.2vw,28px);font-weight:900;letter-spacing:-.03em;line-height:1.3;color:#fff}
+.step p{font-family:var(--f-kr);font-size:15px;color:#BDB9C9;line-height:1.7}
+.how .shotnote{font-size:12px;color:#8E8A9B;padding-bottom:28px}
+
+/* 위치 */
+.near .grid{display:grid;grid-template-columns:.95fr 1.05fr;gap:clamp(32px,6vw,90px);align-items:center}
+.radarbox{position:relative;aspect-ratio:1;max-width:560px;width:100%;margin-inline:auto;border-radius:50%;background:radial-gradient(circle at 50% 50%,#fff 0%,#F7F5FA 60%,var(--pearl) 72%)}
+#radar{position:absolute;inset:0;width:100%;height:100%}
+.rules{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:30px}
+.rule{background:var(--paper);border-radius:22px;padding:20px;box-shadow:0 0 0 1px var(--line)}
+.rule strong{display:block;font-size:clamp(22px,2.4vw,30px);font-weight:900;letter-spacing:-.04em;line-height:1.1}
+.rule span{display:block;font-family:var(--f-kr);font-size:14px;color:var(--muted);margin-top:8px;line-height:1.6}
+
+/* 안전 */
+.safe{background:linear-gradient(180deg,var(--pearl),#ECE7F6)}
+.safe .head{max-width:820px}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:clamp(40px,6vw,70px)}
+.card{position:relative;border-radius:28px;padding:26px 22px 24px;min-height:250px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;transition:transform .5s var(--ease)}
+.card:hover{transform:translateY(-6px) rotate(-.6deg)}
+.card:nth-child(1){background:var(--lilac)}
+.card:nth-child(2){background:var(--sky)}
+.card:nth-child(3){background:var(--blush)}
+.card:nth-child(4){background:var(--mint)}
+.card .num{font-size:clamp(46px,5vw,70px);font-weight:900;letter-spacing:-.06em;line-height:.9}
+.card .num small{font-size:.4em;letter-spacing:-.02em;margin-left:2px}
+.card h3{font-family:var(--f-kr);font-size:19px;font-weight:900;letter-spacing:-.02em;margin-top:18px}
+.card p{font-family:var(--f-kr);font-size:14px;line-height:1.65;color:#3F3B4B;margin-top:8px}
+
+/* 요금 */
+.price .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:clamp(40px,6vw,70px)}
+.plan{border-radius:32px;padding:clamp(24px,3vw,38px);background:var(--paper);box-shadow:0 0 0 1px var(--line);display:flex;flex-direction:column;gap:16px}
+.plan.plus{background:var(--ink);color:#fff;box-shadow:none;position:relative;overflow:hidden}
+.plan.plus::after{content:"";position:absolute;width:420px;height:420px;right:-160px;top:-160px;border-radius:50%;border:38px solid rgba(201,184,245,.18)}
+.plan .tag{align-self:flex-start;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:6px 12px;border-radius:999px;background:var(--lilac);color:var(--violet-deep)}
+.plan.plus .tag{background:rgba(255,255,255,.12);color:#E2D8FF}
+.plan h3{font-family:var(--f-kr);font-weight:900;font-size:clamp(26px,3vw,36px);letter-spacing:-.04em}
+.plan .amt{font-size:clamp(40px,5vw,64px);font-weight:900;letter-spacing:-.06em;line-height:1}
+.plan .amt small{font-size:.32em;font-weight:700;letter-spacing:-.01em;color:var(--muted);margin-left:6px}
+.plan.plus .amt small{color:#BDB9C9}
+.plan ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;font-family:var(--f-kr);font-size:15px}
+.plan li{display:flex;gap:10px;align-items:flex-start}
+.plan li::before{content:"";width:18px;height:18px;flex:none;margin-top:3px;border-radius:50%;border:2px solid currentColor;opacity:.5}
+.plan .fine{font-family:var(--f-kr);font-size:13px;color:var(--muted)}
+.plan.plus .fine{color:#A9A4B8}
+
+/* 마지막 */
+.finale{min-height:92svh;display:flex;align-items:center;overflow:hidden;background:var(--paper)}
+#finaleRings{position:absolute;inset:0;width:100%;height:100%}
+.finale .inner{position:relative;z-index:2;text-align:center;display:flex;flex-direction:column;align-items:center;gap:26px;padding-block:120px}
+.finale .mega2{font-weight:900;letter-spacing:-.06em;line-height:.88;font-size:clamp(52px,10vw,150px)}
+.finale .mega2 .serif{font-family:var(--f-serif);font-style:italic;font-weight:400;letter-spacing:-.02em;color:var(--violet)}
+.mailbox{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center;font-family:var(--f-kr);font-size:15px;color:var(--muted)}
+.mailbox code{font-family:var(--f-body);font-weight:800;font-size:17px;color:var(--ink);user-select:all}
+.mailbox button{border:1.5px solid var(--ink);background:transparent;border-radius:999px;padding:6px 14px;font:inherit;font-size:13px;font-weight:700;color:var(--ink);cursor:pointer}
+.mailbox button:hover{background:var(--pearl)}
+
+/* 고객지원 */
+.support{background:var(--pearl)}
+.faq{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:40px}
+details{background:var(--paper);border-radius:22px;padding:20px 22px;box-shadow:0 0 0 1px var(--line)}
+summary{cursor:pointer;font-family:var(--f-kr);font-weight:800;font-size:17px;letter-spacing:-.02em;list-style:none;display:flex;justify-content:space-between;gap:12px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-family:var(--f-body);font-weight:500;font-size:22px;line-height:1;transition:transform .3s var(--ease)}
+details[open] summary::after{transform:rotate(45deg)}
+details p{font-family:var(--f-kr);font-size:15px;color:#4A4855;margin-top:12px;line-height:1.75}
+
+/* 푸터 */
+footer{background:var(--ink);color:#C9C5D3;padding-block:56px calc(40px + env(safe-area-inset-bottom,0px));font-size:13px;line-height:1.8}
+footer .top{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:flex-end;padding-bottom:28px;border-bottom:1px solid #34323C;margin-bottom:24px}
+footer .word{color:#fff;font-size:30px}
+footer .links{display:flex;gap:18px;flex-wrap:wrap;font-weight:600}
+footer .links a{text-decoration:none;color:#fff}
+footer .links a:hover{color:#C9B8F5}
+footer .biz{font-family:var(--f-kr);color:#9A96A6}
+footer .biz span{white-space:nowrap}
+
+/* 커서 */
+.cursor{position:fixed;left:0;top:0;width:38px;height:38px;border:1.5px solid var(--ink);border-radius:50%;pointer-events:none;z-index:100;transform:translate(-50%,-50%);transition:width .3s var(--ease),height .3s var(--ease),background .3s,border-color .3s;mix-blend-mode:multiply;display:none}
+.cursor.on{width:74px;height:74px;background:var(--lilac);border-color:var(--lilac)}
+@media (hover:hover) and (pointer:fine){.cursor{display:block}}
+
+/* 반응형 */
+@media (max-width:980px){
+  .today .grid,.near .grid{grid-template-columns:1fr}
+  .cards{grid-template-columns:1fr 1fr}
+  .near .radarbox{order:-1;max-width:440px}
+}
+@media (max-width:760px){
+  .price .grid,.faq{grid-template-columns:1fr}
+  .rail{width:auto;flex-direction:column;align-items:center}
+  .step{width:100%;max-width:400px;align-items:center;text-align:center}
+  .step .phone{width:min(64vw,250px)}
+}
+@media (max-width:520px){
+  .cards,.rules{grid-template-columns:1fr}
+  .card{min-height:0}
+  .hero{padding-block:100px 28px}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .track,.scrollcue span,.qcard h3 .caret{animation:none}
+  .cursor{display:none!important}
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" aria-hidden="true"></div>
+
+<header class="bar wrap" id="bar">
+  <div class="inner row">
+    <a class="word" href="#top" aria-label="연결고리 Yeonlink 처음으로">yeonlink<i>.</i><small>연결고리</small></a>
+    <nav aria-label="사이트">
+      <a href="#today">오늘의 질문</a>
+      <a href="#how">고리 거는 법</a>
+      <a href="#near">위치</a>
+      <a href="#safe">안전</a>
+      <a href="#support">고객지원</a>
+      <a class="pill" href="#download">앱 받기</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero wrap" aria-labelledby="h-hero">
+    <canvas id="rings" aria-hidden="true"></canvas>
+    <div class="inner">
+      <div class="lede">
+        <p class="kr-eyebrow">오늘의 질문으로 만나는 근처 인연 · 만 19세 이상</p>
+        <p>사진보다 답이 먼저예요. 매일 하나의 질문에 답하면, 근처 사람들의 답이 열립니다.</p>
+      </div>
+      <h1 class="mega" id="h-hero" aria-label="Words first. Feel closer.">
+        <span class="line" data-split>Words first.</span>
+        <span class="line"><span data-split>Feel</span> <span class="serif" data-split>closer.</span></span>
+      </h1>
+      <div class="foot">
+        <div class="ctas">
+          <a class="cta" href="#download"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.37 12.6c-.02-2.3 1.88-3.4 1.96-3.46-1.07-1.56-2.73-1.77-3.32-1.8-1.41-.14-2.76.83-3.48.83-.72 0-1.82-.81-3-.79-1.54.02-2.97.9-3.76 2.28-1.6 2.78-.41 6.9 1.15 9.16.76 1.1 1.67 2.34 2.86 2.3 1.15-.05 1.58-.74 2.97-.74 1.38 0 1.78.74 2.99.72 1.24-.02 2.02-1.12 2.77-2.23.87-1.28 1.23-2.52 1.25-2.58-.03-.01-2.4-.92-2.42-3.65zM14.1 5.86c.63-.77 1.06-1.83.94-2.89-.91.04-2.02.61-2.67 1.37-.58.67-1.1 1.76-.96 2.8 1.02.08 2.06-.52 2.69-1.28z"/></svg><span><span class="sub">곧 출시</span><span class="t">App Store</span></span></a>
+          <a class="ghost" href="#how">어떻게 만나나요</a>
+        </div>
+        <p class="scrollcue"><span></span>Scroll</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="stream" aria-label="오늘 남겨진 답변 예시">
+    <div class="track" id="trackA"></div>
+    <div class="track rev" id="trackB"></div>
+    <p class="note">예시 답변</p>
+  </div>
+
+  <section class="today sec wrap" id="today" aria-labelledby="h-today">
+    <div class="inner grid">
+      <div class="qcard" id="qcard">
+        <div class="date"><span>오늘의 질문</span><b id="qday">D-DAY</b></div>
+        <h3 id="qtext" aria-live="polite">주말 아침 첫 한 시간, 보통 뭐 하세요?</h3>
+        <div class="ans">
+          <div class="a"><b style="background:var(--lilac)">나</b><div>커피 내리고 동네 한 바퀴 걸어요. 그 시간에 하루 계획이 정리돼요.<small>내 답 · 방금</small></div></div>
+          <div class="a locked"><b style="background:var(--sky)">민</b><div>테니스장 첫 코트 잡으러 아침 일찍 나가요.<small>1km 이내</small></div></div>
+          <div class="a locked"><b style="background:var(--blush)">서</b><div>좋아하는 전시를 정해 두고 천천히 걸어서 가요.<small>약 2km</small></div></div>
+        </div>
+        <p class="lockmsg" id="lockmsg">답을 남기면 근처 사람들의 답이 열려요</p>
+      </div>
+      <div class="side">
+        <p class="eyebrow">01 · Today's question</p>
+        <h2 class="big" id="h-today">하루에 하나,<br><span class="serif">one</span> 질문.</h2>
+        <p class="body">매일 같은 질문이 모두에게 열려요. 내 답을 먼저 남겨야 근처 사람들의 답을 볼 수 있어서, 사진을 넘기는 대신 말을 읽게 됩니다.</p>
+        <div class="facts">
+          <div><strong>1</strong><span>하루 질문 수</span></div>
+          <div><strong>3</strong><span>하루 무료 고리</span></div>
+          <div><strong>20<small style="font-size:.5em">km</small></strong><span>무료 보는 범위</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="how" id="how" aria-labelledby="h-how">
+    <div class="wrap"><div class="inner head">
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <p class="eyebrow">02 · How it links</p>
+        <h2 class="big" id="h-how">답 하나에서<br><span class="serif">대화</span>까지.</h2>
+      </div>
+      <p class="body">고리는 '이 답, 좋았어요'라는 신호예요. 두 사람이 서로 고리를 걸어야만 대화가 열립니다.</p>
+    </div></div>
+    <div class="wrap" id="railwrap">
+      <div class="rail" id="rail">
+        <article class="step"><div class="phone"><img src="img/s2.webp" alt="오늘의 질문에 답을 쓰는 앱 화면" loading="lazy" width="720" height="1561"></div><span class="n">STEP 1</span><h3>오늘의 질문에 답해요</h3><p>짧아도 괜찮아요. 내 답이 곧 내 첫인상이 됩니다.</p></article>
+        <article class="step"><div class="phone"><img src="img/s3.webp" alt="근처 사람들이 거리 구간으로 표시된 앱 화면" loading="lazy" width="720" height="1561"></div><span class="n">STEP 2</span><h3>근처의 답을 읽어요</h3><p>가까운 순으로, 거리는 구간으로만 보여요. 정확한 위치는 누구에게도 보이지 않아요.</p></article>
+        <article class="step"><div class="phone"><img src="img/s4.webp" alt="받은 고리 목록 앱 화면" loading="lazy" width="720" height="1561"></div><span class="n">STEP 3</span><h3>마음에 든 답에 고리를 걸어요</h3><p>한마디를 붙여서 보내요. 무료로 하루 3번.</p></article>
+        <article class="step"><div class="phone"><img src="img/s5.webp" alt="두 사람의 고리가 이어진 앱 화면" loading="lazy" width="720" height="1561"></div><span class="n">STEP 4</span><h3>서로 걸면 이어져요</h3><p>상대도 내 답에 고리를 걸면 두 고리가 이어지고 대화가 열립니다.</p></article>
+        <article class="step"><div class="phone"><img src="img/s6.webp" alt="대화 화면과 사진 공개 요청" loading="lazy" width="720" height="1561"></div><span class="n">STEP 5</span><h3>여섯 마디 뒤에 사진</h3><p>서로 여섯 마디를 나누고, 두 사람 모두 동의해야 사진이 공개돼요.</p></article>
+      </div>
+      <p class="shotnote inner">앱 화면 속 인물은 모두 예시입니다.</p>
+    </div>
+  </section>
+
+  <section class="near sec wrap" id="near" aria-labelledby="h-near">
+    <div class="inner grid">
+      <div>
+        <p class="eyebrow">03 · Near, not exact</p>
+        <h2 class="big" id="h-near" style="margin-top:20px">가깝게,<br>그러나 <span class="serif">흐리게.</span></h2>
+        <p class="body" style="margin-top:22px">휴대폰의 현재 위치로 근처 사람을 찾지만, 위치는 약 1km 칸으로 뭉개서 저장해요. 상대에게는 거리 구간과 30도 단위로 흐린 방향만 보입니다.</p>
+        <div class="rules">
+          <div class="rule"><strong>≈1 km</strong><span>위치는 1km 칸 단위로만 저장</span></div>
+          <div class="rule"><strong>구간</strong><span>'1km 이내', '약 3km'처럼만 표시</span></div>
+          <div class="rule"><strong>30°</strong><span>방향은 일부러 흐리게</span></div>
+          <div class="rule"><strong>0</strong><span>정확한 좌표가 다른 사람에게 보이는 횟수</span></div>
+        </div>
+      </div>
+      <div class="radarbox"><canvas id="radar" role="img" aria-label="내 위치를 1km 칸으로 흐리게 표시하고 주변 사람을 거리 구간으로 보여주는 그림"></canvas></div>
+    </div>
+  </section>
+
+  <section class="safe sec wrap" id="safe" aria-labelledby="h-safe">
+    <div class="inner">
+      <div class="head">
+        <p class="eyebrow">04 · Safety by design</p>
+        <h2 class="big" id="h-safe" style="margin-top:20px">안심이 먼저 있어야<br><span class="serif">설렘</span>도 생겨요.</h2>
+      </div>
+      <div class="cards">
+        <div class="card"><div class="num">19<small>+</small></div><div><h3>성인만 가입</h3><p>생년월일로 만 19세 미만은 가입할 수 없어요.</p></div></div>
+        <div class="card"><div class="num">2<small>명 동의</small></div><div><h3>사진은 서로 동의 후</h3><p>대화를 나누고 두 사람이 모두 동의해야 사진이 보여요.</p></div></div>
+        <div class="card"><div class="num">24<small>h</small></div><div><h3>신고는 하루 안에</h3><p>불쾌한 상대는 바로 신고·차단하고, 신고는 24시간 안에 검토해요.</p></div></div>
+        <div class="card"><div class="num">1<small>번 탭</small></div><div><h3>언제든 계정 삭제</h3><p>앱 안에서 바로 삭제하면 답변·대화·사진이 함께 지워져요.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="price sec wrap" id="price" aria-labelledby="h-price">
+    <div class="inner">
+      <p class="eyebrow">05 · Pricing</p>
+      <h2 class="big" id="h-price" style="margin-top:20px">시작은 <span class="serif">무료.</span></h2>
+      <div class="grid">
+        <div class="plan">
+          <span class="tag">Free</span>
+          <h3>연결고리</h3>
+          <p class="amt">0<small>원</small></p>
+          <ul><li>매일 오늘의 질문과 답변</li><li>하루 고리 3개 · 한마디 120자</li><li>보는 범위 20km</li><li>대화, 서로 동의한 사진 공개</li><li>신고·차단·계정 삭제는 언제나 무료</li></ul>
+        </div>
+        <div class="plan plus">
+          <span class="tag">Plus · 준비 중</span>
+          <h3>연결고리 플러스</h3>
+          <p class="amt">14,900<small>원 / 월</small></p>
+          <ul><li>하루 고리 10개 · 한마디 300자</li><li>내 답을 읽은 사람 보기</li><li>보는 범위 50km · 나라 전체</li></ul>
+          <p class="fine">3개월 35,700원 · 고리 5개 4,900원. 첫 버전은 모든 기능을 무료로 열어 두고, 플러스는 다음 업데이트에서 시작해요.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="finale wrap" id="download" aria-labelledby="h-final">
+    <canvas id="finaleRings" aria-hidden="true"></canvas>
+    <div class="inner">
+      <p class="eyebrow">Coming to the App Store</p>
+      <h2 class="mega2" id="h-final">오늘, <span class="serif">답</span>부터.</h2>
+      <p class="body" style="text-align:center">iPhone용 연결고리가 곧 App Store에 올라가요. 출시 소식과 문의는 아래 주소로 보내 주세요.</p>
+      <div class="mailbox"><span>문의</span><code id="mail">help@yeonlink.com</code><button type="button" id="copy">복사</button><span id="copied" aria-live="polite"></span></div>
+    </div>
+  </section>
+
+  <section class="support sec wrap" id="support" aria-labelledby="h-support">
+    <div class="inner">
+      <p class="eyebrow">Support</p>
+      <h2 class="big" id="h-support" style="margin-top:20px">고객지원</h2>
+      <p class="body" style="margin-top:16px">문의는 help@yeonlink.com으로 보내 주세요. 영업일 기준 1일 안에 답장하고, 신고는 24시간 안에 검토해요.</p>
+      <div class="faq">
+        <details><summary>계정은 어떻게 삭제하나요?</summary><p>앱의 나 → 설정 → 계정 삭제에서 바로 지울 수 있어요. 답변, 고리, 대화, 사진이 모두 함께 삭제되고 되돌릴 수 없어요.</p></details>
+        <details><summary>제 정확한 위치가 보이나요?</summary><p>보이지 않아요. 위치는 약 1km 칸으로 뭉개서 저장하고, 다른 사람에게는 '약 3km' 같은 거리 구간과 흐린 방향만 표시돼요. 설정에서 위치 사용을 끌 수도 있어요.</p></details>
+        <details><summary>사진은 언제 공개되나요?</summary><p>고리로 이어진 상대와 서로 여섯 마디 이상 나눈 뒤, 두 사람이 모두 공개에 동의해야 보여요.</p></details>
+        <details><summary>불쾌한 메시지를 받았어요</summary><p>프로필이나 대화방 오른쪽 위 메뉴에서 신고·차단을 눌러 주세요. 차단하면 서로의 답과 대화가 즉시 보이지 않고, 신고는 24시간 안에 검토해요.</p></details>
+        <details><summary>누가 가입할 수 있나요?</summary><p>만 19세 이상이면 이메일로 가입할 수 있어요. 지금은 대한민국에서만 이용할 수 있어요.</p></details>
+        <details><summary>요금이 있나요?</summary><p>첫 버전은 무료예요. 이후 플러스 구독(월 14,900원)이 추가되어도 답변, 하루 고리 3개, 대화, 신고·차단은 계속 무료입니다.</p></details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap">
+  <div class="inner">
+    <div class="top">
+      <span class="word">yeonlink<i>.</i></span>
+      <nav class="links" aria-label="정책">
+        <a href="#support">고객지원</a>
+        <a href="privacy.html">개인정보처리방침</a>
+        <a href="terms.html">이용약관</a>
+        <a href="location.html">위치기반서비스 약관</a>
+      </nav>
+    </div>
+    <p class="biz"><span>엘모컴퍼니(ELMOCOMPANY)</span> · <span>대표 조승완</span> · <span>사업자등록번호 108-18-93619</span><br><span>서울특별시 동작구 상도로 410, 2층</span> · <span>02-3482-2701</span> · <span>help@yeonlink.com</span></p>
+    <p class="biz" style="margin-top:10px">© 2026 ELMOCOMPANY. 연결고리는 만 19세 이상만 이용할 수 있어요.</p>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+(function(){
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var hasG = typeof window.gsap !== 'undefined' && typeof window.ScrollTrigger !== 'undefined';
+  if (hasG) gsap.registerPlugin(ScrollTrigger);
+
+  /* 상단 바 */
+  var bar = document.getElementById('bar');
+  function onScroll(){ bar.classList.toggle('scrolled', window.scrollY > 20); }
+  window.addEventListener('scroll', onScroll, {passive:true}); onScroll();
+
+  /* 흐르는 답 */
+  var answers = [
+    ['지','필름 카메라 챙겨서 빵집까지 걸어가요','lilac'],['민','첫 코트 잡으러 테니스장에','sky'],
+    ['서','전시 하나 정해 두고 천천히 걸어요','blush'],['도','시장 구경하면서 점심 메뉴를 정해요','mint'],
+    ['하','강아지랑 공원 한 바퀴','lilac'],['수','창문 열고 커피 내리면서 책 몇 장','sky'],
+    ['유','늦잠이요. 진심으로요','blush'],['예','한강에서 자전거 타요','mint'],
+    ['태','요가 매트부터 펴요','lilac'],['소','라디오 틀어 두고 빨래 개요','sky'],
+    ['다','동네 카페 창가 자리를 노려요','blush'],['시','기타 줄 갈고 한 곡 쳐요','mint']
+  ];
+  var dist = ['1km 이내','약 2km','약 3km','약 5km','약 7km','약 9km'];
+  function chips(list, off){
+    var h=''; for (var r=0;r<2;r++) list.forEach(function(a,i){
+      h += '<span class="chip"><b style="background:var(--'+a[2]+')">'+a[0]+'</b>'+a[1]+' <em>'+dist[(i+off)%dist.length]+'</em></span>';
+    }); return h;
+  }
+  document.getElementById('trackA').innerHTML = chips(answers.slice(0,6).concat(answers.slice(6)), 0);
+  document.getElementById('trackB').innerHTML = chips(answers.slice(6).concat(answers.slice(0,6)), 3);
+
+  /* 오늘 날짜 */
+  try{
+    var d = new Date(); var kst = new Date(d.getTime() + (d.getTimezoneOffset()+540)*60000);
+    document.getElementById('qday').textContent = (kst.getMonth()+1)+'월 '+kst.getDate()+'일';
+  }catch(_){}
+
+  /* 복사 */
+  var copyBtn = document.getElementById('copy');
+  copyBtn.addEventListener('click', function(){
+    var t = document.getElementById('mail').textContent, msg = document.getElementById('copied');
+    function sel(){ var r=document.createRange(); r.selectNodeContents(document.getElementById('mail')); var s=getSelection(); s.removeAllRanges(); s.addRange(r); msg.textContent='선택했어요. 복사해 주세요'; }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(function(){ msg.textContent='복사했어요'; }, sel); else sel();
+  });
+
+  /* 유리 고리 (캔버스) */
+  var PAL = [[196,178,248],[156,205,246],[244,178,160],[150,214,186],[196,178,248]];
+  function palAt(t){ t=((t%1)+1)%1*4; var i=Math.floor(t), f=t-i, a=PAL[i], b=PAL[i+1];
+    return [a[0]+(b[0]-a[0])*f, a[1]+(b[1]-a[1])*f, a[2]+(b[2]-a[2])*f]; }
+  function Rings(canvas, opts){
+    var ctx = canvas.getContext('2d'), W=0, H=0, dpr=1, st={sep:opts.sep0, rot:0, tilt:0.95, mx:0, my:0, scale:opts.scale||1};
+    function size(){ dpr=Math.min(window.devicePixelRatio||1,2); var r=canvas.getBoundingClientRect(); W=r.width; H=r.height; canvas.width=W*dpr; canvas.height=H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); }
+    size(); window.addEventListener('resize', size);
+    function ring(cx, phase, axisTilt){
+      var R = Math.min(W,H)*0.27*st.scale, segs=120, pts=[];
+      for (var i=0;i<=segs;i++){
+        var a=i/segs*Math.PI*2, x=Math.cos(a)*R, y=Math.sin(a)*R, z=0;
+        // 고리 자체 기울기 (y축 회전)
+        var ca=Math.cos(axisTilt), sa=Math.sin(axisTilt);
+        var x1=x*ca, z1=x*sa; x=x1; z=z1;
+        // 전체 회전 (x축 기울임 + 천천히 회전)
+        var ct=Math.cos(st.tilt+st.my*0.25), sn=Math.sin(st.tilt+st.my*0.25);
+        var y2=y*ct - z*sn, z2=y*sn + z*ct; y=y2; z=z2;
+        var cr=Math.cos(st.rot+st.mx*0.3), sr=Math.sin(st.rot+st.mx*0.3);
+        var x3=x*cr + z*sr, z3=-x*sr + z*cr; x=x3+cx+(opts.dx?opts.dx():0); z=z3;
+        var p = 900/(900 + z);
+        pts.push({x:W/2 + x*p, y:H*opts.cy + y*p, z:z, t:i/segs+phase, p:p});
+      }
+      return pts;
+    }
+    function draw(){
+      ctx.clearRect(0,0,W,H);
+      var R = Math.min(W,H)*0.27*st.scale, s = st.sep*R;
+      var A = ring(-s, 0, Math.PI/2*0.0), B = ring(s, 0.5, Math.PI/2);
+      var segs=[];
+      [A,B].forEach(function(P, k){ for (var i=0;i<P.length-1;i++) segs.push({a:P[i], b:P[i+1], z:(P[i].z+P[i+1].z)/2, k:k}); });
+      segs.sort(function(u,v){ return v.z - u.z; });
+      var tube = Math.max(14, R*0.17);
+      for (var j=0;j<segs.length;j++){
+        var g=segs[j], c=palAt(g.a.t + st.rot*0.08), w=tube*g.a.p;
+        var depth = Math.max(0, Math.min(1, 0.5 - g.z/(R*2.4)));
+        ctx.lineCap='round';
+        ctx.strokeStyle='rgba('+(c[0]|0)+','+(c[1]|0)+','+(c[2]|0)+','+(0.72+depth*0.26)+')';
+        ctx.lineWidth=w; ctx.beginPath(); ctx.moveTo(g.a.x,g.a.y); ctx.lineTo(g.b.x,g.b.y); ctx.stroke();
+        ctx.strokeStyle='rgba(255,255,255,'+(0.35+depth*0.5)+')';
+        ctx.lineWidth=w*0.22; ctx.beginPath(); ctx.moveTo(g.a.x,g.a.y-w*0.22); ctx.lineTo(g.b.x,g.b.y-w*0.22); ctx.stroke();
+        ctx.strokeStyle='rgba(92,71,139,'+(0.10+depth*0.12)+')';
+        ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(g.a.x,g.a.y+w*0.5); ctx.lineTo(g.b.x,g.b.y+w*0.5); ctx.stroke();
+      }
+    }
+    var running=true, last=performance.now();
+    function loop(now){
+      var dt=Math.min(50, now-last); last=now;
+      if (!reduce) st.rot += dt*0.00018;
+      draw(); if (running) requestAnimationFrame(loop);
+    }
+    requestAnimationFrame(loop);
+    if ('IntersectionObserver' in window){
+      new IntersectionObserver(function(es){ es.forEach(function(e){ var was=running; running=e.isIntersecting; if(running&&!was){ last=performance.now(); requestAnimationFrame(loop);} }); }).observe(canvas);
+    }
+    return st;
+  }
+  var heroRings = Rings(document.getElementById('rings'), {sep0:1.05, cy:0.42, scale:1.15, dx:function(){ return window.innerWidth>900 ? window.innerWidth*0.17 : 0; }});
+  var finRings = Rings(document.getElementById('finaleRings'), {sep0:1.4, cy:0.5, scale:1.05});
+  if (!reduce){
+    window.addEventListener('pointermove', function(e){
+      var nx=e.clientX/window.innerWidth-0.5, ny=e.clientY/window.innerHeight-0.5;
+      heroRings.mx=nx; heroRings.my=ny; finRings.mx=nx; finRings.my=ny;
+    }, {passive:true});
+  }
+
+  /* 위치 레이더 */
+  (function(){
+    var c=document.getElementById('radar'), ctx=c.getContext('2d'), W=0, dpr=1, t0=performance.now();
+    function size(){ dpr=Math.min(window.devicePixelRatio||1,2); W=c.getBoundingClientRect().width; c.width=W*dpr; c.height=W*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); }
+    size(); window.addEventListener('resize', size);
+    var people=[[0.16,40,'민','#DCE9F7'],[0.28,110,'서','#DAEEE4'],[0.42,200,'하','#E3DCFF'],[0.55,300,'유','#F7DDD5'],[0.7,20,'도','#DAEEE4'],[0.83,250,'수','#E3DCFF']];
+    var labels=[[0.22,'1km 이내'],[0.45,'약 3km'],[0.68,'약 7km'],[0.9,'약 15km']];
+    function frame(now){
+      var t=(now-t0)/1000, cx=W/2, R=W/2*0.96;
+      ctx.clearRect(0,0,W,W);
+      ctx.font='600 '+Math.max(10,W*0.022)+'px Inter, "Noto Sans KR", sans-serif'; ctx.textAlign='center';
+      labels.forEach(function(l){ ctx.strokeStyle='rgba(92,71,139,.22)'; ctx.lineWidth=1.2; ctx.beginPath(); ctx.arc(cx,cx,R*l[0],0,Math.PI*2); ctx.stroke(); ctx.fillStyle='#8B88A0'; ctx.fillText(l[1], cx, cx-R*l[0]+Math.max(12,W*0.03)); });
+      // 30도 부채꼴
+      var sweep = reduce ? 0.6 : (t*0.5)%(Math.PI*2);
+      for (var k=0;k<12;k++){ ctx.strokeStyle='rgba(92,71,139,.07)'; ctx.beginPath(); ctx.moveTo(cx,cx); ctx.lineTo(cx+Math.cos(k*Math.PI/6)*R, cx+Math.sin(k*Math.PI/6)*R); ctx.stroke(); }
+      var wedge = Math.floor(sweep/(Math.PI/6))*(Math.PI/6);
+      ctx.fillStyle='rgba(227,220,255,.55)'; ctx.beginPath(); ctx.moveTo(cx,cx); ctx.arc(cx,cx,R*0.92,wedge,wedge+Math.PI/6); ctx.closePath(); ctx.fill();
+      // 1km 칸
+      var cell=R*0.11, jx=Math.sin(t*0.9)*cell*0.42, jy=Math.cos(t*0.7)*cell*0.38;
+      ctx.fillStyle='rgba(92,71,139,.08)'; ctx.strokeStyle='rgba(92,71,139,.35)'; ctx.setLineDash([4,4]);
+      ctx.beginPath(); ctx.rect(cx-cell/2,cx-cell/2,cell,cell); ctx.fill(); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle='rgba(29,28,34,.25)'; ctx.beginPath(); ctx.arc(cx+jx,cx+jy,3,0,Math.PI*2); ctx.fill();
+      // 사람들
+      people.forEach(function(p,i){
+        var a=(p[1]*Math.PI/180)+(reduce?0:Math.sin(t*0.3+i)*0.04), r=R*p[0];
+        var x=cx+Math.cos(a)*r, y=cx+Math.sin(a)*r, s=Math.max(13,W*0.04);
+        var lit = Math.abs(((a-wedge)%(Math.PI*2)+Math.PI*2)%(Math.PI*2)) < Math.PI/6;
+        ctx.fillStyle=p[3]; ctx.beginPath(); ctx.arc(x,y,s*(lit?1.15:1),0,Math.PI*2); ctx.fill();
+        ctx.strokeStyle= lit ? '#5C478B' : 'rgba(255,255,255,.9)'; ctx.lineWidth= lit?2.5:2; ctx.stroke();
+        ctx.fillStyle='#2E2147'; ctx.font='700 '+(s*0.85)+'px "Noto Sans KR", sans-serif'; ctx.textBaseline='middle'; ctx.fillText(p[2],x,y+1); ctx.textBaseline='alphabetic';
+      });
+      // 나
+      var me=Math.max(16,W*0.05); ctx.fillStyle='#1D1C22'; ctx.beginPath(); ctx.arc(cx,cx,me,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle='#fff'; ctx.font='700 '+(me*0.8)+'px "Noto Sans KR", sans-serif'; ctx.textBaseline='middle'; ctx.fillText('나',cx,cx+1); ctx.textBaseline='alphabetic';
+      if (!reduce || !frame.done){ frame.done=true; requestAnimationFrame(frame); }
+    }
+    requestAnimationFrame(frame);
+  })();
+
+  /* 질문 타이핑 */
+  var Q = ['주말 아침 첫 한 시간, 보통 뭐 하세요?','처음 가는 동네에서 제일 먼저 찾는 곳은?','요즘 나를 가장 웃게 한 일은?','비 오는 날 꼭 하고 싶은 것 하나는?'];
+  var qEl = document.getElementById('qtext');
+  if (!reduce){
+    var qi=0;
+    (function typeNext(){
+      var s=Q[qi%Q.length], n=0; qi++;
+      var iv=setInterval(function(){ n++; qEl.innerHTML = s.slice(0,n) + '<span class="caret"></span>'; if(n>=s.length){ clearInterval(iv); setTimeout(typeNext, 3600); } }, 55);
+    })();
+  }
+
+  if (!hasG || reduce) return;
+
+  /* 글자 쪼개기 */
+  document.querySelectorAll('[data-split]').forEach(function(el){
+    var txt = el.textContent; el.textContent='';
+    Array.from(txt).forEach(function(ch){ var s=document.createElement('span'); s.className='ch'; s.textContent = ch===' ' ? ' ' : ch; el.appendChild(s); });
+  });
+  var chs = document.querySelectorAll('.mega .ch');
+  gsap.from(chs, {yPercent:110, rotate:8, duration:1.1, ease:'expo.out', stagger:0.03, delay:0.1});
+  gsap.from('.hero .lede > *, .hero .foot', {y:24, opacity:0, duration:1, ease:'power3.out', stagger:0.1, delay:0.6});
+
+  // 스크롤: 고리가 서로 걸림 + 글자가 흩어짐
+  ScrollTrigger.create({trigger:'.hero', start:'top top', end:'bottom top', scrub:true,
+    onUpdate:function(self){ heroRings.sep = 1.05 - self.progress*0.62; heroRings.tilt = 0.95 + self.progress*0.5; }});
+  gsap.to('.mega .line:first-child .ch', {xPercent:function(i){ return (i-6)*18; }, ease:'none', scrollTrigger:{trigger:'.hero', start:'top top', end:'bottom top', scrub:true}});
+  gsap.to('.mega .line:last-child', {x:function(){ return window.innerWidth*0.12; }, ease:'none', scrollTrigger:{trigger:'.hero', start:'top top', end:'bottom top', scrub:true}});
+
+  ScrollTrigger.create({trigger:'.finale', start:'top bottom', end:'center center', scrub:true,
+    onUpdate:function(self){ finRings.sep = 1.4 - self.progress*0.95; }});
+
+  // 오늘의 질문: 잠긴 답이 풀림
+  ScrollTrigger.create({trigger:'#qcard', start:'top 55%', once:true, onEnter:function(){
+    gsap.to('#qcard .locked', {filter:'blur(0px)', opacity:1, duration:1, stagger:0.35, delay:0.9, onStart:function(){}, onComplete:function(){}});
+    gsap.to('#lockmsg', {opacity:0, y:10, duration:0.5, delay:0.6});
+  }});
+
+  // 큰 제목: 가볍게 떠오름 (보이는 상태에서 시작)
+  gsap.utils.toArray('.big, .mega2').forEach(function(el){
+    gsap.fromTo(el, {y:40}, {y:0, ease:'power2.out', scrollTrigger:{trigger:el, start:'top 95%', end:'top 55%', scrub:true}});
+  });
+  gsap.utils.toArray('.card').forEach(function(el,i){
+    gsap.fromTo(el, {y:60, rotate:i%2?2:-2}, {y:0, rotate:0, ease:'power2.out', scrollTrigger:{trigger:'.cards', start:'top 95%', end:'top 45%', scrub:true}});
+  });
+
+  // 고리 거는 법: 가로로 흐르는 레일 (넓은 화면)
+  ScrollTrigger.matchMedia({
+    '(min-width: 761px)': function(){
+      var rail=document.getElementById('rail');
+      function dist(){ return Math.max(0, rail.scrollWidth - window.innerWidth + 80); }
+      gsap.to(rail, {x:function(){ return -dist(); }, ease:'none',
+        scrollTrigger:{trigger:'#railwrap', start:'top 12%', end:function(){ return '+='+dist(); }, pin:true, scrub:0.6, invalidateOnRefresh:true}});
+      gsap.utils.toArray('.step .phone').forEach(function(p,i){ gsap.fromTo(p,{rotate:i%2?3:-3},{rotate:i%2?-3:3,ease:'none',scrollTrigger:{trigger:'#railwrap',start:'top 12%',end:function(){return '+='+dist();},scrub:true}}); });
+    }
+  });
+
+  // 커서
+  var cur=document.querySelector('.cursor');
+  if (window.matchMedia('(hover:hover) and (pointer:fine)').matches){
+    var qx=gsap.quickTo(cur,'x',{duration:0.35,ease:'power3'}), qy=gsap.quickTo(cur,'y',{duration:0.35,ease:'power3'});
+    window.addEventListener('pointermove', function(e){ qx(e.clientX); qy(e.clientY); }, {passive:true});
+    document.querySelectorAll('a, button, summary, .card').forEach(function(el){
+      el.addEventListener('pointerenter', function(){ cur.classList.add('on'); });
+      el.addEventListener('pointerleave', function(){ cur.classList.remove('on'); });
+    });
+  }
+})();
+</script>
+</body>
+</html>
