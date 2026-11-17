@@ -68,7 +68,7 @@ footer{margin-top:22px;color:var(--muted);font-size:13px}
 
 <section id="v-privacy" data-v="privacy" aria-labelledby="t-privacy">
   <h1 id="t-privacy">개인정보처리방침</h1>
-  <p class="eff">시행일 2026년 11월 10일</p>
+  <p class="eff">시행일 2026년 11월 10일 · 개정 공고 2026년 11월 17일, 개정 시행 2026년 11월 24일(알림 받기 기능에 따른 수집 항목·이용 목적·처리 위탁·국외 이전 추가)</p>
   <p>엘모컴퍼니(ELMO COMPANY)(이하 '회사')은 「개인정보 보호법」 등 관련 법령을 지키며, 연링크 서비스(이하 '서비스') 이용자의 개인정보를 다음과 같이 처리합니다.</p>
 
   <h2>1. 처리하는 개인정보</h2>
@@ -77,6 +77,7 @@ footer{margin-top:22px;color:var(--muted);font-size:13px}
     <tbody>
       <tr><td>필수</td><td>이메일 주소(로그인), 생년월일, 닉네임, 성별, 답변을 보고 싶은 상대의 성별, 대략적인 현재 위치(약 1km 단위)</td><td>가입 시</td></tr>
       <tr><td>선택</td><td>프로필 사진(최대 6장), 직업, 자기소개, 관심사</td><td>가입·프로필 수정 시</td></tr>
+      <tr><td>선택(알림을 켠 경우)</td><td>알림용 기기 식별값(푸시 토큰)</td><td>앱에서 알림 받기를 켤 때</td></tr>
       <tr><td>이용 중 생성</td><td>오늘의 질문 답변, 보내고 받은 고리와 한마디, 대화 내용, 사진 공개 동의 기록, 답변을 읽은 기록(읽은 사람·시각), 신고·차단 기록, 접속 기록, 기기 정보(OS·앱 버전), 오류 기록</td><td>서비스 이용 시</td></tr>
       <tr><td>유료 서비스(도입 시)</td><td>구매 상품, 구매·만료 일시, 스토어 거래 번호(카드번호 등 결제 정보는 회사가 받지 않음)</td><td>결제 시</td></tr>
     </tbody>
@@ -88,6 +89,7 @@ footer{margin-top:22px;color:var(--muted);font-size:13px}
     <li>회원 식별, 만 19세 이상 확인, 중복 가입·부정 이용 방지</li>
     <li>오늘의 질문 제공, 근처 회원의 답변 보여주기, 고리 연결과 대화 기능 제공</li>
     <li>서로 동의한 회원 사이의 사진 공개</li>
+    <li>새 고리·고리 연결·새 메시지·오늘의 질문 알림 발송(알림을 켠 회원에 한하며, 알림에는 대화와 답변 내용을 넣지 않음)</li>
     <li>'내 답을 읽은 사람' 기능 제공(유료 서비스 도입 시)</li>
     <li>신고 처리, 이용 제한, 분쟁 대응</li>
     <li>개인을 알아볼 수 없는 형태의 이용 통계</li>
@@ -116,7 +118,7 @@ footer{margin-top:22px;color:var(--muted);font-size:13px}
     <tbody>
       <tr><td>Supabase, Inc.</td><td>데이터베이스·로그인·사진 저장 등 서버 운영 (데이터 보관 지역: 대한민국 서울 리전)</td></tr>
       <tr><td>Plus Five Five, Inc. (서비스명 Resend)</td><td>로그인 인증 코드 메일 발송</td></tr>
-      <tr><td>Apple Inc.</td><td>앱 배포, 인앱결제 처리(유료 서비스 도입 시)</td></tr>
+      <tr><td>Apple Inc.</td><td>앱 배포, 인앱결제 처리(유료 서비스 도입 시), 알림 전송(Apple 푸시 알림 서비스)</td></tr>
     </tbody>
   </table></div>
   <h2>6-1. 국외 이전</h2>
@@ -126,6 +128,7 @@ footer{margin-top:22px;color:var(--muted);font-size:13px}
     <tbody>
       <tr><td>Plus Five Five, Inc. · Resend (support@resend.com)</td><td>미국 (메일 발송 서버: 일본 도쿄)</td><td>이메일 주소, 로그인 인증 코드</td><td>로그인 인증 코드 메일 발송</td><td>로그인 코드를 요청할 때마다 암호화된 네트워크로 전송</td><td>발송 목적 달성 또는 위탁 계약 종료 시까지</td></tr>
       <tr><td>Supabase, Inc.</td><td>미국 (데이터 저장: 대한민국 서울)</td><td>회원 정보, 답변·메시지·사진 등 서비스 이용 기록</td><td>서버 운영과 장애 대응</td><td>서울 리전에 저장하고, 운영·지원이 필요할 때 암호화된 네트워크로 원격 접근</td><td>회원 탈퇴 또는 위탁 계약 종료 시까지</td></tr>
+      <tr><td>Apple Inc. (apple.com/kr/privacy/contact)</td><td>미국</td><td>알림용 기기 식별값, 알림 제목과 문구(대화·답변 내용은 포함하지 않음. 오늘의 질문 알림에는 그날의 질문 문장이 들어감)</td><td>알림을 켠 회원의 기기로 알림 전송</td><td>알림을 보낼 때마다 암호화된 네트워크로 전송</td><td>전송 후 Apple의 보관 정책에 따름. 회사는 알림을 끄거나 탈퇴하면 기기 식별값을 삭제</td></tr>
     </tbody>
   </table></div>
 
