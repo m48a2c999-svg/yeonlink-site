@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>연링크 운영 현황</title>
+<style>
+:root{--bg:#F6F5F2;--paper:#fff;--ink:#202026;--muted:#5E5A66;--line:#E3E0E8;--accent:#5C478B;--soft:#ECE6F8;--warn:#9A3B2E;--ok:#2E6B4A}
+@media (prefers-color-scheme:dark){:root{--bg:#17161B;--paper:#211F27;--ink:#EEECF2;--muted:#A6A1B1;--line:#38343F;--accent:#B9A6EA;--soft:#2E2940;--warn:#F0A090;--ok:#8FD4AE}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 -apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif}
+.wrap{max-width:1040px;margin:0 auto;padding:20px 16px 60px}
+header{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}h1{font-size:20px;margin:0;flex:1}
+.muted{color:var(--muted)}.small{font-size:13px}
+button,input{font:inherit}button{border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:10px;padding:8px 14px;cursor:pointer}
+button.primary{background:var(--accent);border-color:var(--accent);color:var(--bg);font-weight:600}
+input{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--paper);color:var(--ink);width:100%}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px}
+.card h2{font-size:15px;margin:0 0 10px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:14px}
+.tile{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.tile b{display:block;font-size:26px;line-height:1.2;font-variant-numeric:tabular-nums}.tile span{font-size:13px;color:var(--muted)}
+.tile.alert b{color:var(--warn)}
+.scroll{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:14px}th,td{text-align:left;padding:7px 10px;border-top:1px solid var(--line);white-space:nowrap}
+th{font-size:12px;color:var(--muted);font-weight:600;border-top:0}td.wrapcell{white-space:normal;min-width:220px}
+.tag{display:inline-block;font-size:12px;padding:1px 7px;border-radius:999px;background:var(--soft);color:var(--accent);margin-right:4px}
+.tag.warn{background:transparent;border:1px solid var(--warn);color:var(--warn)}
+.bars{display:flex;align-items:flex-end;gap:4px;height:90px}.bars div{flex:1;min-width:8px;background:var(--accent);border-radius:4px 4px 0 0;position:relative}
+.bars div[data-v="0"]{background:var(--line)}.barlab{display:flex;gap:4px;font-size:11px;color:var(--muted);margin-top:4px}.barlab span{flex:1;min-width:8px;text-align:center;overflow:hidden}
+.ans{border-top:1px solid var(--line);padding:10px 0}.ans:first-of-type{border-top:0}.ans .q{font-size:13px;color:var(--muted)}.ans .a{overflow-wrap:anywhere}
+#login{max-width:380px;margin:12vh auto 0}#login .card>*{margin-bottom:10px}#msg{min-height:20px}
+[hidden]{display:none!important}
+</style></head><body><div class="wrap">
+<section id="login" hidden><div class="card"><h1>연링크 운영 현황</h1><p class="muted small" style="margin:0">운영자 계정의 이메일로 로그인해요. 앱과 같은 6자리 코드가 메일로 와요.</p>
+<input id="email" type="email" placeholder="이메일" autocomplete="email"><button class="primary" id="send">코드 받기</button>
+<div id="codebox" hidden><input id="code" inputmode="numeric" maxlength="6" placeholder="6자리 코드"><button class="primary" id="verify" style="margin-top:10px;width:100%">로그인</button></div>
+<p id="msg" class="small muted"></p></div></section>
+<section id="dash" hidden>
+<header><h1>연링크 운영 현황</h1><span class="muted small" id="stamp"></span><button id="refresh">새로 고침</button><button id="logout">로그아웃</button></header>
+<p class="muted small" id="today" style="margin:-6px 0 14px"></p>
+<div class="tiles" id="tiles"></div>
+<div class="card"><h2>최근 14일 · 가입 / 답변 / 고리</h2><div id="chart"></div></div>
+<div class="card" id="reports-card" hidden><h2>처리 안 된 신고</h2><div class="scroll" id="reports"></div></div>
+<div class="card"><h2>회원</h2><div class="scroll" id="members"></div></div>
+<div class="card"><h2>가입하다 멈춘 사람 <span class="muted small" style="font-weight:400">· 이메일만 넣고 프로필을 만들지 않음</span></h2><div class="scroll" id="incomplete"></div></div>
+<div class="card"><h2>최근 답변</h2><div id="answers"></div></div>
+<p class="muted small">30초마다 자동으로 새로 고쳐요. 심사용 계정과 테스트 인물은 숫자에서 뺐어요. 대화 내용과 이메일은 여기에 나오지 않아요.</p>
+</section></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script>
+(function(){
+var sb=supabase.createClient('https://qoyvpxtvcwkonwdtkdhk.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFveXZweHR2Y3drb253ZHRrZGhrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQyNDMwNjAsImV4cCI6MjEwOTgxOTA2MH0.pMcHXIOxu3_Abm6JcWPHjUNBQ7ZEoEuuerUpGoh0aSI');
+var $=function(s){return document.querySelector(s)},timer=null;
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function kst(t,withTime){if(!t)return '–';var d=new Date(t);return d.toLocaleString('ko-KR',{timeZone:'Asia/Seoul',month:'numeric',day:'numeric',hour:withTime===false?undefined:'2-digit',minute:withTime===false?undefined:'2-digit',hour12:false})}
+function ago(t){if(!t)return '–';var m=Math.round((Date.now()-new Date(t))/60000);if(m<1)return '방금';if(m<60)return m+'분 전';if(m<1440)return Math.round(m/60)+'시간 전';return Math.round(m/1440)+'일 전'}
+function show(which){$('#login').hidden=which!=='login';$('#dash').hidden=which!=='dash'}
+function msg(t){$('#msg').textContent=t||''}
+function tile(n,label,alert){return '<div class="tile'+(alert&&n>0?' alert':'')+'"><b>'+esc(n)+'</b><span>'+esc(label)+'</span></div>'}
+function bars(rows,key,label){var max=Math.max(1,Math.max.apply(null,rows.map(function(r){return r[key]})));
+  return '<p class="small muted" style="margin:10px 0 4px">'+label+' · 합계 '+rows.reduce(function(s,r){return s+r[key]},0)+'</p><div class="bars">'+rows.map(function(r){return '<div data-v="'+r[key]+'" title="'+esc(r.day)+' · '+r[key]+'" style="height:'+Math.max(4,Math.round(r[key]/max*100))+'%"></div>'}).join('')+'</div><div class="barlab">'+rows.map(function(r){return '<span>'+(r[key]||'')+'</span>'}).join('')+'</div>'}
+function render(o){
+  $('#stamp').textContent=kst(o.at)+' 기준';
+  $('#today').textContent='오늘의 질문 · '+(o.question||'아직 정해지지 않음');
+  $('#tiles').innerHTML=tile(o.members,'회원')+tile(o.joined_today,'오늘 가입')+tile(o.joined_7d,'7일 가입')+tile(o.active_7d,'7일 안에 로그인')+tile(o.answered_today,'오늘 답한 사람')+tile(o.answers_total,'누적 답변')+tile(o.hooks_today,'오늘 고리')+tile(o.hooks_total,'누적 고리')+tile(o.connections_total,'이어진 고리')+tile(o.messages_7d,'7일 메시지')+tile(o.plus_now,'플러스 구독 중')+tile(o.push_devices,'알림 켠 기기')+tile(o.signup_started_no_profile,'가입하다 멈춤')+tile(o.reports_open,'처리 안 된 신고',true)+tile(o.suspended,'정지 계정',true);
+  var days=(o.by_day||[]).map(function(r){return {day:String(r.day).slice(5),joined:r.joined,answers:r.answers,hooks:r.hooks}});
+  $('#chart').innerHTML=bars(days,'joined','가입')+bars(days,'answers','답변')+bars(days,'hooks','고리')+'<div class="barlab">'+days.map(function(r,i){return '<span>'+(i%2?'':esc(r.day))+'</span>'}).join('')+'</div>';
+  var rp=o.open_reports||[];$('#reports-card').hidden=!rp.length;
+  $('#reports').innerHTML='<table><tr><th>시각</th><th>신고한 사람</th><th>대상</th><th>사유</th><th>메모</th></tr>'+rp.map(function(r){return '<tr><td>'+kst(r.at)+'</td><td>'+esc(r.reporter||'–')+'</td><td>'+esc(r.target||'–')+(r.test?' <span class="tag">테스트 인물</span>':'')+'</td><td>'+esc(r.reason)+'</td><td class="wrapcell">'+esc(r.note||'')+'</td></tr>'}).join('')+'</table>';
+  var ml=o.member_list||[];
+  $('#members').innerHTML=ml.length?'<table><tr><th>닉네임</th><th>성별·나이</th><th>지역</th><th>가입</th><th>마지막 로그인</th><th>답변</th><th>상태</th></tr>'+ml.map(function(m){return '<tr><td>'+esc(m.nick)+'</td><td>'+(m.gender==='m'?'남':m.gender==='f'?'여':esc(m.gender))+' · '+esc(m.age)+'</td><td>'+esc(m.area||'–')+'</td><td>'+kst(m.joined)+'</td><td>'+ago(m.last_in)+'</td><td>'+esc(m.answers)+(m.answered_today?' <span class="tag">오늘 답함</span>':'')+'</td><td>'+(m.plus?'<span class="tag">플러스</span>':'')+(m.push?'<span class="tag">알림</span>':'')+(m.visible?'':'<span class="tag warn">숨김</span>')+(m.suspended?'<span class="tag warn">정지</span>':'')+'</td></tr>'}).join('')+'</table>':'<p class="muted" style="margin:0">아직 회원이 없어요.</p>';
+  var inc=o.incomplete||[];
+  $('#incomplete').innerHTML=inc.length?'<table><tr><th>시작한 시각</th><th>메일 코드 확인</th></tr>'+inc.map(function(r){return '<tr><td>'+kst(r.started)+'</td><td>'+(r.email_confirmed?'확인함 (프로필 단계에서 멈춤)':'확인 안 함 (코드를 넣지 않음)')+'</td></tr>'}).join('')+'</table>':'<p class="muted" style="margin:0">없어요.</p>';
+  var an=o.recent_answers||[];
+  $('#answers').innerHTML=an.length?an.map(function(a){return '<div class="ans"><div class="q">'+esc(String(a.day).slice(5))+' · '+esc(a.nick)+' · '+esc(a.q||'')+'</div><div class="a">'+esc(a.a)+'</div></div>'}).join(''):'<p class="muted" style="margin:0">아직 답변이 없어요.</p>';
+}
+function load(){
+  return sb.rpc('admin_overview').then(function(r){
+    if(r.error){show('login');msg(/운영자/.test(r.error.message)?'이 계정은 운영자가 아니에요.':'현황을 불러오지 못했어요. '+r.error.message);clearInterval(timer);return sb.auth.signOut()}
+    show('dash');render(r.data);
+  });
+}
+function start(){load();clearInterval(timer);timer=setInterval(function(){if(!document.hidden)load()},30000)}
+$('#send').onclick=function(){var e=$('#email').value.trim();if(!e)return;msg('코드를 보내는 중…');sb.auth.signInWithOtp({email:e,options:{shouldCreateUser:false}}).then(function(r){if(r.error){msg('코드를 보내지 못했어요. 가입된 이메일인지 확인해 주세요.');return}$('#codebox').hidden=false;msg('메일로 온 6자리 코드를 넣어 주세요.');$('#code').focus()})};
+$('#verify').onclick=function(){sb.auth.verifyOtp({email:$('#email').value.trim(),token:$('#code').value.trim(),type:'email'}).then(function(r){if(r.error){msg('코드가 맞지 않거나 시간이 지났어요.');return}msg('');start()})};
+$('#refresh').onclick=load;
+$('#logout').onclick=function(){clearInterval(timer);sb.auth.signOut().then(function(){show('login');msg('')})};
+document.addEventListener('visibilitychange',function(){if(!document.hidden&&!$('#dash').hidden)load()});
+sb.auth.getSession().then(function(r){if(r.data&&r.data.session)start();else show('login')});
+})();
+</script></body></html>
